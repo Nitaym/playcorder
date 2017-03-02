@@ -1,0 +1,6 @@
+Android/.idea/
+Android/gradle/wrapper/gradle-wrapper.jar
+Android/gradle/wrapper/gradle-wrapper.properties
+Android/gradlew
+Android/gradlew.bat
+*.pyc

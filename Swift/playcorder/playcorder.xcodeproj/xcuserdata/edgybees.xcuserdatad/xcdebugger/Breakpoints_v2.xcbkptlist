@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "playcorder/PlaycorderPlayer.swift"
+            timestampString = "538071931.888541"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "ReadPacket()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static playcorder.PlaycorderPlayer.ReadPacket() -&gt; Swift.Optional&lt;Foundation.Data&gt;"
+                  moduleName = "playcorder"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/edgybees/Documents/playcorder/Swift/playcorder/playcorder/PlaycorderPlayer.swift"
+                  timestampString = "538071306.863248"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72"
+                  offsetFromSymbolStart = "973">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.UnsafePointer&lt;Swift.Int&gt;) -&gt; Swift.Int in static playcorder.PlaycorderPlayer.ReadPacket() -&gt; Swift.Optional&lt;Foundation.Data&gt;"
+                  moduleName = "playcorder"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/edgybees/Documents/playcorder/Swift/playcorder/playcorder/PlaycorderPlayer.swift"
+                  timestampString = "538071306.865705"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72"
+                  offsetFromSymbolStart = "8">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "playcorder/PlaycorderPlayer.swift"
+            timestampString = "538071931.888613"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
+            landmarkName = "ReadPacket()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

@@ -4,3 +4,7 @@ Android/gradle/wrapper/gradle-wrapper.properties
 Android/gradlew
 Android/gradlew.bat
 *.pyc
+/C/VSProject/PlaycorderTester/.vs
+/C/VSProject/PlaycorderTester/Debug
+/Python/.idea
+/.idea

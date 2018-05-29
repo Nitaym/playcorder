@@ -1,0 +1,69 @@
+apply plugin: 'com.android.library'
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.2'
+
+        // Required plugins added to classpath to facilitate pushing to Jcenter/Bintray
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+    }
+}
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+}
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'playcorder'   // Has to be same as your library module name
+
+    publishedGroupId = 'com.gravitize.playcorder'
+    libraryName = 'Playcorder'
+    artifact = 'playcorder'     // Has to be same as your library module name
+
+    libraryDescription = 'A simple library to record and replay data exactly as it was recieved'
+
+    // Your github repo link
+    siteUrl = 'https://github.com/Nitaym/playcorder'
+    gitUrl = 'git@github.com:Nitaym/playcorder.git'
+    githubRepository= 'nitaym/playcorder'
+
+    libraryVersion = '1.0'
+
+    developerId = 'nitay'
+    developerName = 'Nitay Megides'
+    developerEmail = 'nitaym@gmail.com'
+
+    licenseName = 'MIT'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+apply from: 'https://raw.githubusercontent.com/nisrulz/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nisrulz/JCenter/master/bintrayv1.gradle'

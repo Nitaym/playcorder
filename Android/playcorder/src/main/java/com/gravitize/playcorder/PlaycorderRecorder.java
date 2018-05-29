@@ -1,4 +1,4 @@
-package com.playcorder.android;
+package com.gravitize.playcorder;
 
 import android.util.Log;
 

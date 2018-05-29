@@ -1,4 +1,4 @@
-package com.playcorder.android;
+package com.playcorder.playcoderTester;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.gravitize.playcorder.EEOFBehaviour;
+import com.gravitize.playcorder.PlaycorderCallback;
+import com.gravitize.playcorder.PlaycorderPlayer;
+import com.gravitize.playcorder.PlaycorderRecorder;
+import com.gravitize.playcorder.PlaycorderUtils;
+import com.gravitize.playcorder.SPlaycorderPacket;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,11 +25,8 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
     private String TAG = "Playcorder";
     private final int PERMISSION_REQUEST_ID = 456;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
+    private String lastFilename = "";
 
 
     @Override
@@ -65,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.buttonPlay);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                File rootsd = Environment.getExternalStorageDirectory();
-                String videoFilename = rootsd.getAbsolutePath() + "/DroneBox/video-2017-01-16_13-13-11.raw";
-                String dataFilename = rootsd.getAbsolutePath() + "/DroneBox/data-2017-01-16_13-13-11.raw";
+                if (lastFilename == "") {
+                    return;
+                }
 
                 try {
-                    PlaycorderPlayer player = new PlaycorderPlayer(dataFilename, new PlaycorderCallback() {
+                    PlaycorderPlayer player = new PlaycorderPlayer(lastFilename, EEOFBehaviour.Stop, new PlaycorderCallback() {
                         @Override
                         public void PacketReceived(SPlaycorderPacket packet) {
                             Log.d(TAG, "Packet Received (Time: " + packet.Time + " Size: " + packet.Size + ")");
@@ -88,23 +87,45 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 File rootsd = Environment.getExternalStorageDirectory();
-                String dataFilename = rootsd.getAbsolutePath() + "/Playcorder/" + PlaycorderUtils.GetFilename("data", "raw");
-                File directory = new File(Environment.getExternalStorageDirectory(), "Playcorder");
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
+                lastFilename = rootsd.getAbsolutePath() + "/" + PlaycorderUtils.GetFilename("data", "raw");
+//                String dataFilename = rootsd.getAbsolutePath() + "/Playcorder/" + PlaycorderUtils.GetFilename("data", "raw");
+//                File directory = new File(Environment.getExternalStorageDirectory(), "Playcorder");
+//                if (!directory.exists()) {
+//                    directory.mkdirs();
+//                }
 
-                PlaycorderRecorder recorder = new PlaycorderRecorder(dataFilename);
-                byte[] bytes = new byte[]{1, 2, 34, 5};
-                recorder.SavePacket(bytes);
+                final PlaycorderRecorder recorder = new PlaycorderRecorder(lastFilename);
 
-                recorder.Close();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Log.d(TAG, "Recording packets");
+
+                            byte[] bytes = new byte[]{1, 2, 3, 4};
+                            recorder.SavePacket(bytes);
+                            Thread.sleep(500);
+
+                            recorder.SavePacket(bytes);
+                            Thread.sleep(500);
+
+                            recorder.SavePacket(bytes);
+                            Thread.sleep(500);
+
+                            Log.d(TAG, "Recording done");
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        recorder.Close();
+                    }
+                }).start();
+
+
             }
         });
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -139,39 +160,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
-    }
 }

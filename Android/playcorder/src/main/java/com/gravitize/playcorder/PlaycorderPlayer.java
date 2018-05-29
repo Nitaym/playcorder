@@ -1,4 +1,4 @@
-package com.playcorder.android;
+package com.gravitize.playcorder;
 
 import android.os.Environment;
 import android.util.Log;
@@ -9,16 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-class SPlaycorderPacket {
-    int Time;
-    int Size;
-    byte[] Packet;
-}
-
-interface PlaycorderCallback {
-    void PacketReceived(SPlaycorderPacket packet);
-}
-
 public class PlaycorderPlayer {
     private final String TAG = "PlaycorderPlayer";
 
@@ -26,6 +16,8 @@ public class PlaycorderPlayer {
 
     private int lastPacketTime = 0;
     private SPlaycorderPacket lastPacket;
+
+    private EEOFBehaviour eofBehaviour;
 
     private DataInputStream InitializeStream(String streamFilename) throws IOException {
         try {
@@ -46,7 +38,8 @@ public class PlaycorderPlayer {
         return null;
     }
 
-    public PlaycorderPlayer(String streamFilename, final PlaycorderCallback callback) throws IOException {
+    public PlaycorderPlayer(String streamFilename, final EEOFBehaviour eofBehaviour, final PlaycorderCallback callback) throws IOException {
+        this.eofBehaviour = eofBehaviour;
         dataFileStream = InitializeStream(streamFilename);
         if (dataFileStream != null) {
             lastPacket = new SPlaycorderPacket();
@@ -56,11 +49,26 @@ public class PlaycorderPlayer {
                 public void run() {
                     while (true) {
                         // Read a Packet
-                        ReadPacket(dataFileStream, lastPacket);
+                        if (!ReadPacket(dataFileStream, lastPacket)) {
+                            // File has ended, or an error occured
+                            switch (eofBehaviour) {
+                                case Restart:
+                                    try {
+                                        dataFileStream.reset();
+                                    } catch (IOException e) {
+                                        return;
+                                    }
+                                    break;
+                                case Stop:
+                                    return;
+                            }
+                        }
 
                         // Wait if needed
                         try {
-                            Thread.sleep(lastPacket.Time - lastPacketTime);
+                            int time = lastPacket.Time - lastPacketTime;
+                            time = Math.max(0, time);
+                            Thread.sleep(time);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -75,11 +83,15 @@ public class PlaycorderPlayer {
         }
     }
 
-    private static void ReadPacket(InputStream stream, SPlaycorderPacket packet) {
+    private static boolean ReadPacket(InputStream stream, SPlaycorderPacket packet) {
         byte[] intBuffer = new byte[4];
 
         // Read timestamp
         try {
+            if (stream.available() == 0) {
+                return false;
+            }
+
             stream.read(intBuffer, 0, 4);
             ByteBuffer wrapped = ByteBuffer.wrap(intBuffer); // big-endian by default
             packet.Time = wrapped.getInt();
@@ -99,9 +111,10 @@ public class PlaycorderPlayer {
             // Read Packet
             stream.read(packet.Packet, 0, packet.Size);
         } catch (IOException e) {
-            e.printStackTrace();
+            return false;
         }
 
+        return true;
     }
 };
 
